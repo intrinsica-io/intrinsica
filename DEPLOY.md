@@ -97,7 +97,8 @@ gcloud iam service-accounts add-iam-policy-binding $RUN_SA \
 # PR builds only run tests, so they get a separate identity that can do nothing but write
 # logs: a pull request can change cloudbuild-pr.yaml, so a PR build must never hold the
 # rights to deploy to production.
-gcloud projects add-iam-policy-binding $PROJECT_ID \n  --member=serviceAccount:$PR_SA --role=roles/logging.logWriter --condition=None
+gcloud projects add-iam-policy-binding $PROJECT_ID \
+  --member=serviceAccount:$PR_SA --role=roles/logging.logWriter --condition=None
 ```
 **Check:** `gcloud projects get-iam-policy $PROJECT_ID --flatten=bindings --filter="bindings.members:$BUILD_SA" --format="value(bindings.role)"` lists the three roles, and the same command with `$PR_SA` lists only `roles/logging.logWriter`.
 
