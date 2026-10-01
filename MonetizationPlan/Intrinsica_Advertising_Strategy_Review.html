@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Advertising Strategy Review</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--fg:#17202a;--muted:#5d6b78;--line:#dfe3e8;--code:#eef1f4;--accent:#315efb;--good:#2e8b57;--bad:#c44;--warn:#c98a00}
+@media (prefers-color-scheme:dark){:root{--bg:#14171a;--card:#1b1f23;--fg:#e6e9ec;--muted:#9aa5af;--line:#2c3238;--code:#22272c;--accent:#6e95ff;--good:#4fbf85;--bad:#ef6b6b;--warn:#e0a92e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+main{max-width:960px;margin:0 auto;padding:40px 16px 80px}
+h1{font-size:2rem;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 28px}
+h2{margin-top:44px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{margin-top:28px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px 20px;margin:16px 0}
+.verdict{border-left:5px solid var(--accent)}
+.good{border-left:5px solid var(--good)}
+.bad{border-left:5px solid var(--bad)}
+.warn{border-left:5px solid var(--warn)}
+table{border-collapse:collapse;width:100%;background:var(--card);font-size:.95rem;display:block;overflow-x:auto}
+th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top}
+th{background:var(--code)}
+code,pre{font-family:ui-monospace,Consolas,monospace;background:var(--code);border-radius:6px}
+code{padding:.1em .35em;font-size:.9em}
+pre{padding:12px 14px;overflow:auto;font-size:.88rem;line-height:1.5}
+.num{display:inline-block;min-width:1.6em;height:1.6em;line-height:1.6em;text-align:center;border-radius:50%;background:var(--accent);color:#fff;font-size:.85em;font-weight:700;margin-right:6px}
+.tag{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:middle}
+.tag.block{background:var(--bad);color:#fff}.tag.risk{background:var(--warn);color:#111}
+small,.muted{color:var(--muted)}
+</style></head><body><main>
+
+<h1>Advertising Strategy Review</h1>
+<p class="sub">Review of <code>Intrinsica_Advertising_Strategy.html</code> against the live site (intrinsica.io) · 1 October 2026</p>
+
+<div class="card verdict"><strong>Verdict:</strong> the strategy is sound and its core idea is right. But the site can't yet support three things the plan relies on, and two risks aren't covered.
+<strong>Fix the blockers before spending the first €100</strong>, otherwise the money buys traffic you can't learn from.</div>
+
+<h2>What's strong in the strategy</h2>
+<div class="card good"><ul>
+<li><strong>"Advertise the insight, not the product"</strong> and <strong>"the stock analysis is the acquisition unit"</strong>. “Is NVDA overvalued?” beats “try my SaaS”.</li>
+<li><strong>Staged spend</strong> (€100–150 to learn, then decide) and <strong>“don't launch ten channels at once”</strong>.</li>
+<li><strong>Main KPI = paid-plan intent per qualified visitor</strong>, not CTR or followers. That matches what the fake door was built to measure. The plan names match the site (Free / Pro / Unlimited).</li>
+<li>The <strong>“What NOT to do”</strong> list is excellent, especially “don't advertise the technology” and “don't send every ad to the homepage”.</li>
+</ul></div>
+
+<h2>Blockers: the site doesn't support the plan yet</h2>
+
+<div class="card bad"><h3 style="margin-top:0"><span class="num">1</span>No attribution: UTMs are not captured <span class="tag block">BLOCKER</span></h3>
+<p><strong>What a UTM is:</strong> a label added to the end of a link that tells your site <em>where the visitor came from</em>. The page itself doesn't change.</p>
+<pre>https://intrinsica.io/?utm_source=x&amp;utm_campaign=nvda_post
+https://intrinsica.io/?utm_source=google&amp;utm_campaign=fair_value_ads
+https://intrinsica.io/?utm_source=reddit&amp;utm_campaign=valueinvesting</pre>
+<p><code>utm_source</code> = which channel (x, google, reddit…); <code>utm_campaign</code> = which ad or post. Google, X and Reddit Ads can add these automatically.
+<strong>Attribution</strong> = knowing which ad produced which result. If €50 on Google and €50 on X lead to 4 Pro clicks, you need to know where those 4 came from to decide where the next €100 goes.</p>
+<p><strong>The problem today:</strong> the site records <code>page_view</code> with <em>no</em> source information. The events sheet looks like this:</p>
+<table><tr><th>Time</th><th>Event</th><th>Visitor</th></tr>
+<tr><td>14:02</td><td>page_view</td><td>v-81f…</td></tr>
+<tr><td>14:03</td><td>plan_selected (Pro)</td><td>v-81f…</td></tr></table>
+<p><strong>After the fix</strong>, the site reads the UTM labels and the referring website on arrival, remembers them for the visit, and adds them to every event:</p>
+<table><tr><th>Time</th><th>Event</th><th>Visitor</th><th>Source</th><th>Campaign</th></tr>
+<tr><td>14:02</td><td>page_view</td><td>v-81f…</td><td><strong>x</strong></td><td><strong>nvda_post</strong></td></tr>
+<tr><td>14:03</td><td>plan_selected (Pro)</td><td>v-81f…</td><td><strong>x</strong></td><td><strong>nvda_post</strong></td></tr></table>
+<p class="muted">Effort: small (a few hours). Do this first; it makes even free posts measurable.</p></div>
+
+<div class="card bad"><h3 style="margin-top:0"><span class="num">2</span>No ticker landing pages <span class="tag block">BLOCKER</span></h3>
+<p>The plan's best tactics (“NVDA intrinsic value” → the NVDA analysis, Reddit “See NVDA's analysis →”, ticker-specific Google keywords) need links like <code>intrinsica.io/t/NVDA</code>, each with its own X preview card. Today every ad lands on the homepage with AAPL, which the plan itself says not to do.
+This is the <strong>shareable-links project</strong>; it becomes a <strong>prerequisite for paid Stage 2</strong>.</p>
+<p class="muted">Effort: roughly one to two days.</p></div>
+
+<div class="card warn"><h3 style="margin-top:0"><span class="num">3</span>Retargeting needs pixels and cookie consent <span class="tag risk">DEFER</span></h3>
+<p>Stage 5 needs X, Reddit or Meta tracking pixels. In the EU, pixels require <strong>prior consent</strong> (a cookie banner), and the site has none. Recommendation: <strong>skip retargeting during the smoke test</strong>; your own events sheet is enough.</p></div>
+
+<div class="card warn"><h3 style="margin-top:0"><span class="num">4</span>The example uses the wrong scales <span class="tag risk">FIX</span></h3>
+<p>The strategy's sample post shows “Moat: 92/100” and “Risk/Reward: 1.6×”. The site shows <strong>Moat on 0–10</strong> and <strong>Reward/Risk as a tier + score</strong>. Ads and posts must match exactly what the click lands on, or trust drops on arrival.</p></div>
+
+<h2>Risks the strategy doesn't cover</h2>
+
+<div class="card warn"><h3 style="margin-top:0"><span class="num">5</span>Data licence: ads make the Yahoo question sharper</h3>
+<p>Posting “NVDA: Quality 9.4, Fair Value $185” in <strong>paid ads</strong> is unambiguously commercial use of Yahoo-derived numbers, a higher risk than a quiet test page. Options:</p>
+<ul><li><strong>Cautious:</strong> keep creatives free of numbers. Lead with the question and the method; numbers appear only on the site.</li>
+<li><strong>Pragmatic:</strong> accept the risk knowingly for a short campaign.</li></ul></div>
+
+<div class="card warn"><h3 style="margin-top:0"><span class="num">6</span>Financial-content rules</h3>
+<p>Per-stock scores and “fair value” figures in public posts can count as <em>investment recommendations</em> under EU rules (MAR), which require disclosures. Google also requires <strong>financial-services verification</strong> in many countries. At minimum, every post and ad should say <strong>“Not investment advice / for educational purposes”</strong>, matching the site footer. <small>(Not legal advice; worth a short check before the paid stage.)</small></p></div>
+
+<div class="card warn"><h3 style="margin-top:0"><span class="num">7</span>The budget is too small to give a reliable answer</h3>
+<p><strong>The chain from money to answer</strong>; every step loses people:</p>
+<pre>€ spent  →  clicks (visitors)  →  people who run an analysis  →  people who click a paid plan</pre>
+<table><tr><th>Step</th><th>Typical number</th><th>With €75 on Google</th></tr>
+<tr><td>Cost per click (finance keywords)</td><td>€1–5+, because banks and brokers bid on the same words</td><td>≈ 15–75 visitors</td></tr>
+<tr><td>Paid-plan clicks in a fake-door test</td><td>1–3 in every 100 visitors</td><td><strong>≈ 0–2 paid clicks</strong></td></tr></table>
+<p><strong>Why 0–2 tells you nothing:</strong> it's like flipping a coin twice and concluding it always lands heads. With numbers that small, luck dominates, so you can't tell “bad idea” from “unlucky week”.
+<strong>What you need:</strong> roughly <strong>300+ visitors per channel</strong> before judging it.</p>
+<p><strong>Getting there without a bigger budget:</strong></p>
+<ol><li><strong>Cheaper, more specific keywords</strong>: “NVDA fair value”, “is AMD overvalued” rather than “stock analysis”. Fewer bidders, higher intent (needs the ticker pages from blocker 2).</li>
+<li><strong>Cheaper channels</strong>: X and Reddit clicks cost less than Google, and free posts count toward the 300 too, as long as UTMs show where they came from.</li>
+<li><strong>Rules written down before spending</strong>, e.g. “after 300 visitors from a channel: ≥ 2 paid clicks per 100 who ran an analysis → keep going; fewer than 1 per 200 → stop that channel.”</li></ol></div>
+
+<div class="card warn"><h3 style="margin-top:0"><span class="num">8</span>Free channels are under-used</h3>
+<p>Reddit's investing subs mostly ban self-promotion, so “participate genuinely” is right but slow. Faster free places for a launch:</p>
+<ul><li><strong>Hacker News “Show HN”</strong>, <strong>Indie Hackers</strong>, <strong>r/SideProject</strong>, <strong>Product Hunt</strong></li>
+<li>Finance-newsletter and small-YouTuber outreach</li>
+<li>The <strong>methodology itself</strong> as content: “every input and weight is on show” is the differentiator, and it attracts the analytical audience most likely to pay.</li></ul></div>
+
+<h2>Revised sequence</h2>
+<table>
+<tr><th>Order</th><th>Step</th><th>Budget</th><th>Notes</th></tr>
+<tr><td><strong>0a</strong></td><td><strong>UTM + referrer capture</strong> on the funnel events</td><td>€0</td><td>Small build. <strong>Before any posting or spend.</strong></td></tr>
+<tr><td><strong>0b</strong></td><td><strong>Ticker landing pages</strong> <code>/t/{TICKER}</code> with per-ticker X cards</td><td>€0</td><td>The shareable-links project. Needed for Stage 2.</td></tr>
+<tr><td><strong>0c</strong></td><td><strong>Decision thresholds</strong> written down: visitors per channel, keep/stop numbers</td><td>€0</td><td>30 minutes.</td></tr>
+<tr><td>1</td><td>Organic: X posts (correct scales, disclaimer), Show HN, Indie Hackers, r/SideProject</td><td>€0</td><td>Every link carries UTMs.</td></tr>
+<tr><td>2</td><td>Paid test: X + <strong>long-tail</strong> Google ticker keywords, each ad deep-linking to <code>/t/TICKER</code> with UTMs</td><td>€100–150</td><td>Judge per channel only after ~300 visitors.</td></tr>
+<tr><td>3</td><td>Reddit paid, then decide whether to scale</td><td>€50–100</td><td>As in the original plan.</td></tr>
+<tr><td>—</td><td>Retargeting / Meta</td><td>—</td><td>Deferred past the smoke test (needs cookie consent + pixels).</td></tr>
+</table>
+
+<div class="card verdict"><strong>Bottom line:</strong> without UTMs you can't tell <em>which</em> channel worked; with too few visitors you can't tell <em>whether</em> it worked.
+Build <strong>0a</strong> and <strong>0b</strong> and write down <strong>0c</strong>, and the first €100–150 will buy a real answer.</div>
+
+</main></body></html>
